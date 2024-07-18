@@ -1,4 +1,22 @@
 import os, sys, json
 
 
-print(__file__)
+#region Stuff
+
+def stufffunc():
+    return "stuff"
+
+#endregion
+
+
+# region: ParentRegion
+
+#region SUbRegion
+
+def subFunc():
+    return 'str'
+
+#endregion
+ 
+
+# endregion
