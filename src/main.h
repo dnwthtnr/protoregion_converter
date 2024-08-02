@@ -23,7 +23,7 @@ struct FileDataNode{
 
 std::string openFile(std::string filepath);
 
-std::string stripIllegalChars(std::string text);
+void stripIllegalChars(std::string* text);
 
 FileDataNode* parse(std::string fileContent);
 

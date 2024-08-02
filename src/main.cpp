@@ -2,12 +2,12 @@
 
 std::string testFile = "/workspaces/protoregion_converter/src/test.py";
 
-std::string stripIllegalChars(std::string text){
+void stripIllegalChars(std::string* text){
     std::string illegalChars = "\\/:?\"<>|";
-    for (int i = text.begin() ; i < s->end() ; ++i){
-        bool found = illegalChars.find(*it) != std::string::npos;
+    for (int i = *text->begin() ; i < *text->end() ; ++i){
+        bool found = illegalChars.find(i) != std::string::npos;
         if(found){
-            *it = ' ';
+            i = ' ';
         }
 }
 };
@@ -30,59 +30,69 @@ std::string openFile(std::string filepath){
     // };
     fs.close();
     return text;
-};
+}
+
 
 FileDataNode* parse(std::string fileContent)
 {
     FileDataNode* rootNode;
 
-    std::string cachedLine = "";
-    std::string spacelessCachedLine = "";
+    std::string cachedLine;
+    std::string* spacelessCachedLine;
+
+    std::cout << "SIZE OF:" << sizeof(spacelessCachedLine);
+
     FileDataNode* currentNode = rootNode;
     std::vector<FileDataNode*> nodeHistory;
     nodeHistory.push_back(rootNode);
+
     for (char c : fileContent){
 
         cachedLine += c;
+        // End of line
         if (c == '\n'){
 
             // check if line is start or stop region 
             bool isComment = 0;
-            if (spacelessCachedLine.rfind("#region", 0) != std::string::npos){
+            if (spacelessCachedLine->rfind("#region", 0) != std::string::npos){
                 // is beginning of region
 
                 // make file name 
-                spacelessCachedLine.erase(0, 6);
-                spacelessCachedLine.replace(
-                    spacelessCachedLine.begin(), 
-                    spacelessCachedLine.end(), 
+                spacelessCachedLine->erase(0, 6);
+                spacelessCachedLine->replace(
+                    spacelessCachedLine->begin(), 
+                    spacelessCachedLine->end(), 
                     " ", 
                     "_"
                     );
 
-                std::string illegalChars = "\\/:?\"<>|"
-                for (it = s->begin() ; it < s->end() ; ++it){
-                    bool found = illegalChars.find(*it) != string::npos;
-                    if(found){
-                        *it = ' ';
-                    }
-                }
+                std::cout << spacelessCachedLine;
+
+                stripIllegalChars(spacelessCachedLine);
+
+                std::cout << spacelessCachedLine;
 
                 FileDataNode* newNode;
                 newNode->filename = "";
             };
 
             cachedLine.empty();
-            spacelessCachedLine.empty();
+            spacelessCachedLine->empty();
 
             currentNode->content += cachedLine;
         };
-        if (isspace(c)){continue;};
+
+        if (isspace(c)){
+            continue;
+            };
+            
         spacelessCachedLine += c;
 
     };
+
+    return rootNode;
     
-}
+};
 
 
 int main(){
