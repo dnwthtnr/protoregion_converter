@@ -38,7 +38,9 @@ FileDataNode* parse(std::string fileContent)
     FileDataNode* rootNode;
 
     std::string cachedLine;
+    std::string _cached_line_spaceless = "";
     std::string* spacelessCachedLine;
+    spacelessCachedLine = &_cached_line_spaceless;
 
     std::cout << "SIZE OF:" << sizeof(spacelessCachedLine);
 
@@ -52,9 +54,25 @@ FileDataNode* parse(std::string fileContent)
         // End of line
         if (c == '\n'){
 
-            // check if line is start or stop region 
+            // check if line is start or stop region
             bool isComment = 0;
-            if (spacelessCachedLine->rfind("#region", 0) != std::string::npos){
+            std::cout << "Spaceless Cached Line: " << *spacelessCachedLine << " LEN: " << sizeof(*spacelessCachedLine) << "\n"; 
+            std::string region_start_substring = "#region";
+            if( sizeof(spacelessCachedLine) < sizeof(region_start_substring)){
+                // Skip searching for substring 
+                // continue;
+            } 
+            int position = 0;
+            if (sizeof(spacelessCachedLine) >= sizeof(region_start_substring)){
+                position = sizeof(region_start_substring);
+            };
+
+            if (sizeof(spacelessCachedLine) == sizeof(std::string*)){
+                cachedLine.clear();
+                continue;
+            }
+
+            if (spacelessCachedLine->rfind(region_start_substring, position) != std::string::npos){
                 // is beginning of region
 
                 // make file name 
@@ -77,7 +95,7 @@ FileDataNode* parse(std::string fileContent)
             };
 
             cachedLine.empty();
-            spacelessCachedLine->empty();
+            // spacelessCachedLine->empty();
 
             currentNode->content += cachedLine;
         };
@@ -86,7 +104,8 @@ FileDataNode* parse(std::string fileContent)
             continue;
             };
             
-        spacelessCachedLine += c;
+        
+        *spacelessCachedLine += c;
 
     };
 
